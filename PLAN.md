@@ -1,4 +1,14 @@
-# Build The Decision Loop v1
+# Historical Plan: Build The Decision Loop v1
+
+This file is the original implementation plan for the first version of the product.
+
+It is no longer the best source of truth for the current system.
+
+For the live architecture and deployment model, see:
+
+- `README.md`
+- `ARCHITECTURE.md`
+- `AGENTS.md`
 
 **Summary**
 - Build a public, single-screen `Next.js` App Router app that helps founders answer one question: what should I test next?

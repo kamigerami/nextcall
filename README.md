@@ -1,8 +1,11 @@
 # NextPitch
 
-NextPitch is a public, single-screen startup idea validator.
+NextPitch is a landing-first startup decision product.
 
-Its job is simple:
+The public site explains the loop, shows the demo, and requests access.
+The real analyzer lives behind a protected preview surface.
+
+Its job is still simple:
 
 1. Take a startup idea.
 2. Make one hard call on it.
@@ -14,16 +17,28 @@ This product is intentionally not a chat app.
 It is not a brainstorming assistant.
 It is not a generic founder copilot.
 
-It is a strict decision loop:
+The full product is a strict decision loop:
 
 1. `initial` mode: evaluate an idea before testing
 2. `iteration` mode: evaluate what happened after a test
 
 The whole product bet is that structured, blunt output is more useful than a pleasant wall of AI text.
 
+## Public Site Vs Full App
+
+There are now two runtime surfaces:
+
+- `landing`
+  Public production surface. Shows the positioning, demo video, example output, and access CTA.
+- `full`
+  Private preview surface. Renders the real analyzer UI.
+
+The top-level page resolves this split from environment variables.
+Production should be landing-only. Preview should be the real product.
+
 ## What The App Does
 
-For an untested idea, the app returns:
+For an untested idea, the full app returns:
 
 - a verdict: `weak`, `promising`, or `unclear`
 - one strongest angle
@@ -33,7 +48,7 @@ For an untested idea, the app returns:
 - an explicit success condition
 - one clear next step
 
-For a tested angle, the app returns:
+For a tested angle, the full app returns:
 
 - a read on what the result actually means
 - a narrower next angle
@@ -60,7 +75,7 @@ If the output sounds like generic startup advice, the product is failing.
 
 ## Interface
 
-The UI is a single page with two modes:
+The full analyzer UI is a single page with two modes:
 
 - `Validate idea`
 - `Refine after test`
@@ -82,11 +97,16 @@ The client stores only lightweight continuity in `localStorage`:
 
 There is no auth, no saved projects, and no database-backed user history in v1.
 
+The public landing does not render the analyzer at all.
+
 ## API Contract
 
 The app exposes one route:
 
 - `POST /api/analyze`
+
+That route is not publicly available in production.
+It fails closed unless the app is running in `full` mode with analysis enabled.
 
 Input is a discriminated union on `mode`.
 
@@ -184,6 +204,78 @@ The quality gate checks for issues like:
 If the first model answer fails, the system regenerates once with a stricter repair prompt.
 If it still fails, the API returns a deterministic product-style error instead of low-quality output.
 
+## Runtime Configuration
+
+Configuration is centralized in `src/lib/app-config.ts`.
+
+### Required environment variables
+
+```bash
+OPENAI_API_KEY=...
+APP_MODE=landing
+ANALYZE_ENABLED=false
+```
+
+`OPENAI_API_KEY` is still required anywhere you want the full analyzer to work.
+
+### Optional environment variables
+
+These enable production-style IP rate limiting:
+
+```bash
+UPSTASH_REDIS_REST_URL=...
+UPSTASH_REDIS_REST_TOKEN=...
+```
+
+Optional branded inbox override:
+
+```bash
+NEXT_PUBLIC_REQUEST_ACCESS_EMAIL=access@nextpitch.se
+```
+
+### Recommended deployment values
+
+Production:
+
+```bash
+APP_MODE=landing
+ANALYZE_ENABLED=false
+```
+
+Protected tester preview:
+
+```bash
+APP_MODE=full
+ANALYZE_ENABLED=true
+```
+
+If `APP_MODE` is missing or invalid, the app falls back to blocked `landing` behavior.
+
+## Public Landing
+
+The production landing page is intentionally restrained:
+
+- hero with blunt product framing
+- embedded demo video
+- compact explanation of the loop
+- one static proof artifact
+- manual request-access CTA
+
+The demo video is served from:
+
+- source-of-truth render output: `out/nextpitch-demo.mp4`
+- published web asset: `public/demo/nextpitch-demo.mp4`
+
+The CTA points to:
+
+- `access@nextpitch.se`
+
+Intended forwarding target:
+
+- `kami.gerami@codelabs.se`
+
+If Cloudflare Email Routing has not been configured yet, treat that as infrastructure work still pending rather than product code being wrong.
+
 ## Tech Stack
 
 - Next.js App Router
@@ -210,19 +302,19 @@ npm run dev
 
 Open the local URL printed by Next.js, usually [http://localhost:3000](http://localhost:3000).
 
-### Required environment variables
+Typical local preview config for the full product:
 
 ```bash
 OPENAI_API_KEY=...
+APP_MODE=full
+ANALYZE_ENABLED=true
 ```
 
-### Optional environment variables
-
-These enable production-style IP rate limiting:
+Typical local production-surface check:
 
 ```bash
-UPSTASH_REDIS_REST_URL=...
-UPSTASH_REDIS_REST_TOKEN=...
+APP_MODE=landing
+ANALYZE_ENABLED=false
 ```
 
 ## Project Structure
@@ -230,13 +322,19 @@ UPSTASH_REDIS_REST_TOKEN=...
 Main product files:
 
 - `src/app/page.tsx`
+- `src/components/landing-page.tsx`
 - `src/components/idea-validator-app.tsx`
 - `src/app/api/analyze/route.ts`
+- `src/lib/app-config.ts`
 - `src/lib/prompts.ts`
 - `src/lib/schemas.ts`
 - `src/lib/validation.ts`
 - `src/lib/quality-gate.ts`
 - `src/lib/rate-limit.ts`
+
+Architecture reference:
+
+- `ARCHITECTURE.md`
 
 Prompt evaluation harness:
 
@@ -318,6 +416,8 @@ It should not feel:
 
 - chatty
 - supportive for the sake of it
+- like a generic startup landing page
+- like a public self-serve AI tool
 - polished like marketing
 - clever but empty
 - like a cleaned-up rewrite of the input

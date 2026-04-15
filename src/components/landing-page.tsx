@@ -48,71 +48,70 @@ export function LandingPage() {
   return (
     <main className="min-h-screen bg-[#e5e0d7] text-[#111111]">
       <div className="mx-auto flex w-full max-w-[1280px] flex-col px-5 py-5 sm:px-7 sm:py-7 lg:px-10 lg:py-10">
-        <section className="border border-black/10 bg-[#ece7df]">
-          <div className="flex flex-col gap-12 px-5 py-8 sm:px-8 sm:py-10 lg:flex-row lg:items-end lg:justify-between lg:px-10 lg:py-12">
+        <div className="border border-black/10 bg-[#efe9df]">
+          <section>
+            <div className="flex flex-col gap-8 px-5 pb-4 pt-7 sm:px-8 sm:pb-5 sm:pt-8 lg:flex-row lg:items-end lg:justify-between lg:px-10 lg:pb-4 lg:pt-10">
+              <div className="max-w-[720px]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-black/45">
+                  NextPitch
+                </p>
+                <h1 className="mt-4 max-w-[620px] text-5xl font-semibold tracking-[-0.08em] sm:text-6xl lg:text-[4.5rem]">
+                  Stop guessing.
+                </h1>
+                <p className="mt-3 max-w-[520px] text-2xl font-medium tracking-[-0.05em] text-black/72 sm:text-3xl">
+                  Most ideas are not worth building.
+                </p>
+                <p className="mt-5 max-w-[620px] text-base leading-7 text-black/68 sm:text-lg">
+                  NextPitch gives founders one hard call, one angle to push, one test
+                  to run, and one artifact they can actually send.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row lg:self-start">
+                <a
+                  href={requestAccessHref}
+                  className="inline-flex items-center justify-center border border-black bg-black px-5 py-3 text-sm font-medium text-[#f6f2ea] transition hover:bg-[#1a1a1a]"
+                >
+                  Request access
+                </a>
+                <a
+                  href="#demo"
+                  className="inline-flex items-center justify-center border border-black/15 bg-transparent px-5 py-3 text-sm font-medium text-black/72 transition hover:border-black/30 hover:text-black"
+                >
+                  Watch demo
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <section
+            id="demo"
+            className="scroll-mt-6 px-5 pb-7 pt-2 sm:px-8 sm:pb-8 sm:pt-1 lg:px-10 lg:pb-10 lg:pt-0"
+          >
             <div className="max-w-[720px]">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-black/45">
-                NextPitch
-              </p>
-              <h1 className="mt-5 max-w-[620px] text-5xl font-semibold tracking-[-0.08em] sm:text-6xl lg:text-7xl">
-                Stop guessing.
-              </h1>
-              <p className="mt-4 max-w-[520px] text-2xl font-medium tracking-[-0.05em] text-black/72 sm:text-3xl">
-                Most ideas are not worth building.
-              </p>
-              <p className="mt-6 max-w-[620px] text-base leading-7 text-black/68 sm:text-lg">
-                NextPitch gives founders one hard call, one angle to push, one test
-                to run, and one artifact they can actually send.
+              <h2 className="text-3xl font-semibold tracking-[-0.06em] sm:text-[2.4rem]">
+                See the loop in 30 seconds
+              </h2>
+              <p className="mt-2 max-w-[520px] text-base leading-7 text-black/66">
+                One idea in. One hard call out. One test worth running.
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <a
-                href={requestAccessHref}
-                className="inline-flex items-center justify-center border border-black bg-black px-5 py-3 text-sm font-medium text-[#f6f2ea] transition hover:bg-[#1a1a1a]"
+            <div className="mt-4 overflow-hidden rounded-[28px] border border-black/12 bg-[#ece6dc]">
+              <video
+                className="block aspect-video h-auto w-full bg-[#ebe5dc]"
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+                preload="metadata"
               >
-                Request access
-              </a>
-              <a
-                href="#demo"
-                className="inline-flex items-center justify-center border border-black/15 bg-transparent px-5 py-3 text-sm font-medium text-black/72 transition hover:border-black/30 hover:text-black"
-              >
-                Watch demo
-              </a>
+                <source src="/demo/nextpitch-demo.mp4" type="video/mp4" />
+              </video>
             </div>
-          </div>
-        </section>
-
-        <section
-          id="demo"
-          className="border-x border-b border-black/10 bg-[#f5f1ea] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12"
-        >
-          <div className="max-w-[760px]">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
-              Demo
-            </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.06em] sm:text-4xl">
-              See the loop in 30 seconds
-            </h2>
-            <p className="mt-3 max-w-[520px] text-base leading-7 text-black/66">
-              One idea in. One hard call out. One test worth running.
-            </p>
-          </div>
-
-          <div className="mt-7 overflow-hidden rounded-[28px] border border-black/12 bg-[#f0ebe2]">
-            <video
-              className="block aspect-video h-auto w-full bg-[#ebe5dc]"
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls
-              preload="metadata"
-            >
-              <source src="/demo/nextpitch-demo.mp4" type="video/mp4" />
-            </video>
-          </div>
-        </section>
+          </section>
+        </div>
 
         <section className="border-x border-b border-black/10 bg-[#e8e2d8]">
           <div className="grid gap-0 lg:grid-cols-4">

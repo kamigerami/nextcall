@@ -13,11 +13,14 @@ If you change code here, protect the product behavior first.
 
 ## Product Definition
 
-The app helps founders decide what to test next.
+The full app helps founders decide what to test next.
+
+The public site exists to explain the loop and gate access.
 
 It is:
 
-- a single-screen product
+- a landing-first product in production
+- a single-screen analyzer in preview/full mode
 - a strict two-step loop
 - structured output, not chat
 - intentionally opinionated
@@ -40,6 +43,22 @@ There are only two modes:
 
 Every product decision should strengthen that loop.
 
+## Public Vs Private Surface
+
+The repo now has two top-level runtime surfaces:
+
+1. `landing`
+   Public production surface. Explains the product, shows the demo, and requests access.
+2. `full`
+   Private preview surface. Renders the actual analyzer loop.
+
+Protect this split.
+
+- production should feel like a serious landing page, not a half-hidden app
+- preview should feel like the real product, not a marketing wrapper
+- do not leak analyzer UI into `landing`
+- do not let `POST /api/analyze` do paid work unless `APP_MODE=full` and `ANALYZE_ENABLED=true`
+
 ## Non-Negotiable Product Rules
 
 When changing prompts, UI, validation, or evaluation, preserve these rules:
@@ -57,7 +76,7 @@ If the output could apply to 1000 startup ideas, it is too generic.
 
 ## UI Rules
 
-The main result hierarchy must stay obvious:
+In `full` mode, the main result hierarchy must stay obvious:
 
 1. `Verdict`
 2. `Best angle`
@@ -75,6 +94,14 @@ Do not introduce:
 - multi-step wizard sprawl
 
 This app should feel like a decision surface, not a conversation.
+
+In `landing` mode:
+
+- do not render the analyzer interface
+- do not render tabs like `Validate idea` / `Refine after test`
+- do not imply the analyzer is publicly open
+- keep the demo video as proof, not decoration
+- keep the access flow manual and honest
 
 ## Prompt Rules
 
@@ -167,6 +194,12 @@ npm run eval:prompts
 
 If only one case matters for the change, run a focused case and say so explicitly.
 
+Run a build when changing the top-level surface split, page composition, or deployment-facing config:
+
+```bash
+npm run build
+```
+
 ## Editing Guidance
 
 When working in this repo:
@@ -176,6 +209,9 @@ When working in this repo:
 - do not add persistence, auth, or new workflow layers unless explicitly asked
 - do not add AI features that make the product broader
 - do not add more output just because the model can
+- do not add growth tooling, analytics products, or waitlist systems unless explicitly asked
+- do not replace the manual access workflow with signup flows
+- do not weaken the `landing` / `full` separation for convenience
 
 If you are unsure between “more complete” and “more decisive,” pick “more decisive.”
 
@@ -187,8 +223,11 @@ Core product behavior:
 - `src/lib/schemas.ts`
 - `src/lib/validation.ts`
 - `src/lib/quality-gate.ts`
+- `src/lib/app-config.ts`
 - `src/app/api/analyze/route.ts`
+- `src/components/landing-page.tsx`
 - `src/components/idea-validator-app.tsx`
+- `src/app/page.tsx`
 
 Regression system:
 
@@ -197,3 +236,18 @@ Regression system:
 - `prompt-eval/cases/prompt-cases.json`
 
 If you change any of those, assume you are changing the product itself.
+
+## Deployment Truth
+
+Environment switches:
+
+- `APP_MODE=landing|full`
+- `ANALYZE_ENABLED=true|false`
+
+Expected usage:
+
+- production: `APP_MODE=landing`, `ANALYZE_ENABLED=false`
+- protected tester preview: `APP_MODE=full`, `ANALYZE_ENABLED=true`
+
+The branded access CTA points to `access@nextpitch.se`.
+If external email routing is not yet configured, document that clearly rather than pretending it works.
