@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "nextcall",
-  description: "A blunt single-screen tool for deciding what startup angle to test next.",
+  title: "NextPitch",
+  description:
+    "A blunt single-screen tool for deciding what startup angle to test next.",
 };
 
 export default function RootLayout({

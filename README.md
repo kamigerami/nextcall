@@ -1,6 +1,6 @@
-# nextcall
+# NextPitch
 
-nextcall is a public, single-screen startup idea validator.
+NextPitch is a public, single-screen startup idea validator.
 
 Its job is simple:
 

@@ -43,6 +43,8 @@ const initialState: StoredState = {
   latestResult: null,
 };
 
+type VerdictTone = "danger" | "caution" | "success";
+
 function artifactLabel(mode: Mode, result: ResultState | null) {
   if (mode === "initial" && result?.mode === "initial") {
     return result.data.test.artifact_type.replace("_", " ");
@@ -51,12 +53,92 @@ function artifactLabel(mode: Mode, result: ResultState | null) {
   return "hook pack";
 }
 
-function testBody(result: ResultState) {
+function artifactTitle(mode: Mode, result: ResultState | null) {
+  const label = artifactLabel(mode, result);
+
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+function verdictState(
+  result: ResultState,
+  resultSignal: ResultSignal,
+): { label: string; tone: VerdictTone } {
   if (result.mode === "initial") {
-    return `${result.data.test.what_to_do}\n\nSuccess looks like: ${result.data.test.success_condition}`;
+    switch (result.data.assessment.verdict) {
+      case "weak":
+        return { label: "WEAK", tone: "danger" };
+      case "unclear":
+        return { label: "UNCLEAR", tone: "caution" };
+      default:
+        return { label: "PROMISING", tone: "success" };
+    }
   }
 
-  return result.data.next_step;
+  switch (resultSignal) {
+    case "none":
+      return { label: "FAILED ANGLE", tone: "danger" };
+    case "some":
+      return { label: "REFINE", tone: "caution" };
+    default:
+      return { label: "DOUBLE DOWN", tone: "success" };
+  }
+}
+
+function verdictToneClasses(tone: VerdictTone) {
+  if (tone === "danger") {
+    return "border-[#8d210d]/20 bg-[#fff1ec] text-[#7f1d0f]";
+  }
+
+  if (tone === "caution") {
+    return "border-[#9b6a12]/20 bg-[#fff7e5] text-[#7a560f]";
+  }
+
+  return "border-[#1f6a43]/20 bg-[#eef9f2] text-[#185135]";
+}
+
+function formatArtifactText(text: string) {
+  return text.trim();
+}
+
+function ResultPanel({
+  label,
+  title,
+  description,
+  action,
+  tone = "default",
+  descriptionClassName = "",
+}: {
+  label: string;
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  action?: React.ReactNode;
+  tone?: "default" | "feature";
+  descriptionClassName?: string;
+}) {
+  return (
+    <section
+      className={`border-t border-black/10 px-5 py-5 first:border-t-0 sm:px-7 sm:py-6 ${
+        tone === "feature" ? "bg-[#f8f0df]" : ""
+      }`}
+    >
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="max-w-4xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
+            {label}
+          </p>
+          <div className="mt-3">{title}</div>
+          {description ? (
+            <div
+              className={`mt-4 max-w-3xl whitespace-pre-wrap text-sm leading-7 text-black/68 ${descriptionClassName}`}
+            >
+              {description}
+            </div>
+          ) : null}
+        </div>
+        {action ? <div className="shrink-0">{action}</div> : null}
+      </div>
+    </section>
+  );
 }
 
 export function IdeaValidatorApp() {
@@ -102,6 +184,10 @@ export function IdeaValidatorApp() {
 
     return state.latestResult.data.hooks.join("\n");
   }, [state.latestResult]);
+
+  const verdict = state.latestResult
+    ? verdictState(state.latestResult, state.resultSignal)
+    : null;
 
   function updateState(patch: Partial<StoredState>) {
     setState((current) => ({ ...current, ...patch }));
@@ -162,35 +248,38 @@ export function IdeaValidatorApp() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.75),_transparent_38%),linear-gradient(135deg,_#f2f0ea_0%,_#ddd8cf_45%,_#c6c0b7_100%)] text-[#111111]">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1500px] flex-col px-6 py-6 sm:px-8 lg:grid lg:grid-cols-[0.95fr_1.2fr] lg:gap-10 lg:px-10 lg:py-10">
-        <section className="flex flex-col justify-between border-b border-black/10 pb-10 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
-          <div className="space-y-10">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.62),_transparent_32%),linear-gradient(145deg,_#efe7d9_0%,_#ddd2bf_47%,_#cabda6_100%)] text-[#111111]">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1500px] flex-col px-5 py-5 sm:px-7 sm:py-7 lg:grid lg:grid-cols-[0.88fr_1.18fr] lg:gap-8 lg:px-9 lg:py-9">
+        <section className="flex flex-col justify-between border-b border-black/12 pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8">
+          <div className="space-y-8">
             <div className="space-y-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-black/45">
-                nextcall
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-black/48">
+                NextPitch
               </p>
-              <div className="space-y-4">
-                <h1 className="max-w-xl text-5xl font-semibold tracking-[-0.06em] text-black sm:text-6xl">
+              <div className="space-y-3">
+                <h1 className="max-w-xl text-5xl font-semibold tracking-[-0.07em] text-black sm:text-6xl">
                   Stop guessing.
-                  <span className="block text-black/40">Test the sharpest angle next.</span>
+                  <span className="block text-black/46">
+                    Most ideas are not worth building.
+                  </span>
                 </h1>
-                <p className="max-w-lg text-base leading-7 text-black/62 sm:text-lg">
-                  This is not a chat app. Put the idea in, get one hard call, one test,
-                  and one artifact you can actually send.
+                <p className="max-w-lg text-base leading-7 text-black/66 sm:text-lg">
+                  NextPitch gives you one hard call, one angle to push, one test to run,
+                  and one artifact you can send today.
                 </p>
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               {[
-                ["Verdict", "A blunt read on whether the idea has real signal."],
-                ["Best angle", "The single frame worth pushing first."],
-                ["Test this", "A concrete move built for speed, not theater."],
+                ["Verdict", "A hard call. No hedging."],
+                ["Best angle", "One frame worth pushing first."],
+                ["Test this", "A concrete check with a real success bar."],
+                ["Use this artifact", "Something you can copy and send as-is."],
               ].map(([title, body]) => (
                 <div
                   key={title}
-                  className="border border-black/10 bg-white/55 px-4 py-4 backdrop-blur"
+                  className="border border-black/12 bg-white/48 px-4 py-4 backdrop-blur"
                 >
                   <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
                     {title}
@@ -201,14 +290,14 @@ export function IdeaValidatorApp() {
             </div>
           </div>
 
-          <div className="mt-10 border-t border-black/10 pt-6 text-sm text-black/55">
+          <div className="mt-8 border-t border-black/12 pt-5 text-sm text-black/58">
             <p>Weak ideas get called weak. Broad ideas get forced narrower.</p>
-            <p className="mt-2">If the output feels bland, the product is failing.</p>
+            <p className="mt-2">If the answer sounds polite, the product is failing.</p>
           </div>
         </section>
 
         <section className="flex min-h-full flex-col">
-          <div className="border border-black/10 bg-[#fbfaf7]/90 shadow-[0_24px_80px_rgba(17,17,17,0.08)] backdrop-blur">
+          <div className="border border-black/12 bg-[#fbfaf7]/92 shadow-[0_18px_60px_rgba(17,17,17,0.07)] backdrop-blur">
             <div className="border-b border-black/10 px-5 py-4 sm:px-7">
               <div className="flex flex-wrap items-center gap-3">
                 {(["initial", "iteration"] as const).map((mode) => (
@@ -219,7 +308,7 @@ export function IdeaValidatorApp() {
                     className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
                       state.mode === mode
                         ? "border-black bg-black text-white"
-                        : "border-black/10 bg-white text-black/55 hover:border-black/25 hover:text-black"
+                        : "border-black/10 bg-white text-black/60 hover:border-black/25 hover:text-black"
                     }`}
                   >
                     {mode === "initial" ? "Validate idea" : "Refine after test"}
@@ -235,7 +324,7 @@ export function IdeaValidatorApp() {
               <div className="space-y-5">
                 <label className="block">
                   <span className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
-                    {state.mode === "initial" ? "Idea" : "Original idea"}
+                    {state.mode === "initial" ? "Paste the idea" : "Idea you tested"}
                   </span>
                   <textarea
                     id="idea"
@@ -248,14 +337,14 @@ export function IdeaValidatorApp() {
                     }
                     placeholder={
                       state.mode === "initial"
-                        ? "Software for landlords to handle move-out inspections."
+                        ? "Landlords keep missing chargeable damage at move-out because inspections are rushed and inconsistent."
                         : "Tool for accounting firms to chase missing client documents before monthly close."
                     }
                     className="mt-3 min-h-36 w-full resize-none border border-black/10 bg-white px-4 py-4 text-base leading-7 outline-none transition focus:border-black/30"
                     maxLength={500}
                   />
                   <span className="mt-2 block text-xs text-black/45">
-                    Keep it concrete. Buyer, pain, or workflow beats manifesto.
+                    Messy is fine. Paste the raw thought. Buyer, pain, or workflow beats manifesto.
                   </span>
                 </label>
 
@@ -319,9 +408,9 @@ export function IdeaValidatorApp() {
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="inline-flex h-12 items-center justify-center bg-black px-6 text-sm font-medium text-white transition hover:bg-black/85 disabled:cursor-not-allowed disabled:bg-black/40"
+                    className="inline-flex h-14 items-center justify-center bg-black px-7 text-[15px] font-semibold tracking-[0.08em] text-white uppercase transition hover:bg-black/85 disabled:cursor-not-allowed disabled:bg-black/40"
                   >
-                    {isPending ? "Working..." : "Make the call"}
+                    {isPending ? "Working..." : "Make the call →"}
                   </button>
                   <p className="text-sm text-black/45">
                     500 char max. No fluff. No transcript.
@@ -337,52 +426,85 @@ export function IdeaValidatorApp() {
             </form>
           </div>
 
-          <div className="mt-6 flex-1 border border-black/10 bg-white/82 shadow-[0_30px_90px_rgba(17,17,17,0.07)] backdrop-blur">
+          <div className="mt-5 flex-1 border border-black/12 bg-white/84 shadow-[0_24px_70px_rgba(17,17,17,0.06)] backdrop-blur">
             {state.latestResult ? (
               <div className="grid gap-0">
-                <ResultBlock
+                <ResultPanel
                   label="Verdict"
-                  primary={
-                    state.latestResult.mode === "initial"
-                      ? state.latestResult.data.assessment.verdict
-                      : state.resultSignal === "strong"
-                        ? "double down"
-                        : state.resultSignal === "some"
-                          ? "refine"
-                          : "failed angle"
+                  title={
+                    <div className="space-y-4">
+                      <div
+                        className={`inline-flex items-center border px-4 py-3 text-[clamp(1.4rem,3vw,2.7rem)] font-semibold tracking-[-0.06em] ${verdict ? verdictToneClasses(verdict.tone) : ""}`}
+                      >
+                        {verdict?.label}
+                      </div>
+                    </div>
                   }
-                  body={
+                  description={
                     state.latestResult.mode === "initial"
                       ? state.latestResult.data.assessment.reason
                       : state.latestResult.data.analysis
                   }
                 />
-                <ResultBlock
+                <ResultPanel
                   label="Best angle"
-                  primary={
-                    state.latestResult.mode === "initial"
-                      ? state.latestResult.data.best_angle.title
-                      : state.latestResult.data.new_angle
+                  title={
+                    <h2 className="max-w-3xl text-[clamp(1.8rem,3vw,2.5rem)] font-semibold tracking-[-0.05em] text-black">
+                      {
+                        state.latestResult.mode === "initial"
+                          ? state.latestResult.data.best_angle.title
+                          : state.latestResult.data.new_angle
+                      }
+                    </h2>
                   }
-                  body={
+                  description={
                     state.latestResult.mode === "initial"
                       ? state.latestResult.data.best_angle.description
-                      : "Sharper than the last frame, and built to retest fast."
+                      : "Sharper than the last frame. Narrow enough to retest fast."
                   }
                 />
-                <ResultBlock
+                <ResultPanel
                   label="Test this"
-                  primary={
-                    state.latestResult.mode === "initial"
-                      ? state.latestResult.data.next_step.instruction
-                      : "Run this narrower check"
+                  title={
+                    <div className="space-y-4">
+                      <h3 className="max-w-3xl text-[1.55rem] font-semibold tracking-[-0.04em] text-black">
+                        {state.latestResult.mode === "initial"
+                          ? state.latestResult.data.next_step.instruction
+                          : "Run this narrower check"}
+                      </h3>
+                      <p className="max-w-3xl whitespace-pre-wrap text-sm leading-7 text-black/68">
+                        {state.latestResult.mode === "initial"
+                          ? state.latestResult.data.test.what_to_do
+                          : state.latestResult.data.next_step}
+                      </p>
+                      {state.latestResult.mode === "initial" ? (
+                        <div className="max-w-3xl border border-black/12 bg-[#f6f1e6] px-4 py-4">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-black/40">
+                            Success looks like
+                          </p>
+                          <p className="mt-3 text-sm leading-7 text-black/72">
+                            {state.latestResult.data.test.success_condition}
+                          </p>
+                        </div>
+                      ) : null}
+                    </div>
                   }
-                  body={testBody(state.latestResult)}
                 />
-                <ResultBlock
+                <ResultPanel
                   label="Use this artifact"
-                  primary={artifactLabel(state.mode, state.latestResult)}
-                  body={artifactText}
+                  tone="feature"
+                  title={
+                    <div className="space-y-4">
+                      <h3 className="text-[1.45rem] font-semibold tracking-[-0.04em] text-black">
+                        {artifactTitle(state.mode, state.latestResult)}
+                      </h3>
+                      <div className="max-w-4xl border border-black/12 bg-white px-4 py-4">
+                        <p className="whitespace-pre-wrap text-sm leading-7 text-black/78">
+                          {formatArtifactText(artifactText)}
+                        </p>
+                      </div>
+                    </div>
+                  }
                   action={
                     <button
                       type="button"
@@ -394,65 +516,30 @@ export function IdeaValidatorApp() {
                           artifactText,
                         )
                       }
-                      className="border border-black/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-black/55 transition hover:border-black/25 hover:text-black"
+                      className="inline-flex h-12 items-center justify-center border border-black bg-black px-5 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:bg-black/86"
                     >
-                      {copied ? `Copied ${copied}` : "Copy"}
+                      {copied ? `Copied ${copied}` : "Copy artifact"}
                     </button>
                   }
                 />
 
-                <div className="grid gap-0 border-t border-black/10 lg:grid-cols-[1fr_0.95fr]">
-                  <div className="border-b border-black/10 px-5 py-5 sm:px-7 lg:border-b-0 lg:border-r">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
-                      Hooks
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-3">
-                      {state.latestResult.data.hooks.map((hook) => (
-                        <button
-                          key={hook}
-                          type="button"
-                          onClick={() => handleCopy("hook", hook)}
-                          className="border border-black/10 bg-[#f5f2eb] px-3 py-3 text-left text-sm leading-6 text-black transition hover:border-black/30"
-                        >
-                          {hook}
-                        </button>
-                      ))}
-                    </div>
+                <details className="border-t border-black/10 px-5 py-5 sm:px-7">
+                  <summary className="cursor-pointer list-none text-[11px] font-semibold uppercase tracking-[0.26em] text-black/40">
+                    Show hooks
+                  </summary>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    {state.latestResult.data.hooks.map((hook) => (
+                      <button
+                        key={hook}
+                        type="button"
+                        onClick={() => handleCopy("hook", hook)}
+                        className="border border-black/10 bg-[#f5f2eb] px-3 py-3 text-left text-sm leading-6 text-black transition hover:border-black/30"
+                      >
+                        {hook}
+                      </button>
+                    ))}
                   </div>
-
-                  <div className="px-5 py-5 sm:px-7">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
-                      Secondary context
-                    </p>
-                    {state.latestResult.mode === "initial" ? (
-                      <div className="mt-4 space-y-5">
-                        <div>
-                          <p className="text-xs uppercase tracking-[0.22em] text-black/35">
-                            Other frames
-                          </p>
-                          <ul className="mt-3 space-y-2 text-sm leading-6 text-black/65">
-                            {state.latestResult.data.other_angles.map((angle) => (
-                              <li key={angle}>{angle}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <p className="text-xs uppercase tracking-[0.22em] text-black/35">
-                            Why this
-                          </p>
-                          <p className="mt-3 text-sm leading-6 text-black/65">
-                            {state.latestResult.data.next_step.why}
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="mt-4 max-w-md text-sm leading-6 text-black/65">
-                        The point of the second loop is not more ideas. It is a cleaner
-                        read on what the market reacted to.
-                      </p>
-                    )}
-                  </div>
-                </div>
+                </details>
               </div>
             ) : (
               <div className="flex min-h-[420px] flex-col justify-between px-5 py-6 sm:px-7">
@@ -461,14 +548,14 @@ export function IdeaValidatorApp() {
                     Working surface
                   </p>
                   <h2 className="max-w-2xl text-3xl font-semibold tracking-[-0.05em] text-black">
-                    Put one idea in. Get one hard recommendation back.
+                    Put one idea in. Get one hard call back.
                   </h2>
                   <p className="max-w-2xl text-base leading-7 text-black/55">
-                    The goal is not inspiration. The goal is the next real test you can run
-                    without turning this into a chat session.
+                    The goal is not inspiration. The goal is a verdict, a sharper angle,
+                    and a test worth running without turning this into a chat session.
                   </p>
                 </div>
-                <div className="grid gap-4 border-t border-black/10 pt-6 sm:grid-cols-3">
+                <div className="grid gap-3 border-t border-black/10 pt-5 sm:grid-cols-3">
                   {[
                     "Weak ideas get rejected cleanly.",
                     "Boring B2B pain still counts.",
@@ -485,36 +572,5 @@ export function IdeaValidatorApp() {
         </section>
       </div>
     </div>
-  );
-}
-
-function ResultBlock({
-  label,
-  primary,
-  body,
-  action,
-}: {
-  label: string;
-  primary: string;
-  body: string;
-  action?: React.ReactNode;
-}) {
-  return (
-    <section className="border-t border-black/10 first:border-t-0">
-      <div className="grid gap-6 px-5 py-5 sm:px-7 lg:grid-cols-[190px_1fr_auto] lg:items-start">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
-            {label}
-          </p>
-        </div>
-        <div>
-          <p className="text-2xl font-semibold tracking-[-0.04em] text-black">{primary}</p>
-          <p className="mt-3 max-w-3xl whitespace-pre-wrap text-sm leading-7 text-black/65">
-            {body}
-          </p>
-        </div>
-        <div>{action}</div>
-      </div>
-    </section>
   );
 }
