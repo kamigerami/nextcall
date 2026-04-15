@@ -1,7 +1,9 @@
 import {
   InitialResponseSchema,
   IterationResponseSchema,
+  type InitialRequest,
   type InitialResponse,
+  type IterationRequest,
   type IterationResponse,
 } from "../../src/lib/schemas";
 import { evaluateInitialQuality, evaluateIterationQuality } from "../../src/lib/quality-gate";
@@ -677,7 +679,9 @@ export function evaluateDeterministically(
     }
 
     const response = parsed.data;
-    const productionTags = evaluateInitialQuality(testCase.input, response);
+    const request: InitialRequest =
+      testCase.input.mode === "initial" ? testCase.input : { mode: "initial", idea: "" };
+    const productionTags = evaluateInitialQuality(request, response);
     productionTags.forEach((tag) => {
       addTag(tags, reasons, tag as DeterministicTag, `Production quality gate flagged ${tag}.`);
     });
@@ -762,7 +766,17 @@ export function evaluateDeterministically(
     }
 
     const response = parsed.data;
-    const productionTags = evaluateIterationQuality(testCase.input, response);
+    const request: IterationRequest =
+      testCase.input.mode === "iteration"
+        ? testCase.input
+        : {
+            mode: "iteration" as const,
+            idea: "",
+            previous_angle: "",
+            result: "none" as const,
+            notes: "",
+          };
+    const productionTags = evaluateIterationQuality(request, response);
     productionTags.forEach((tag) => {
       addTag(tags, reasons, tag as DeterministicTag, `Production quality gate flagged ${tag}.`);
     });
