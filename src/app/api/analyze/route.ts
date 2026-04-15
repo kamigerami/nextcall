@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { NextResponse } from "next/server";
 
+import { getAppConfig } from "@/lib/app-config";
 import {
   AnalyzeRequestSchema,
   InitialResponseSchema,
@@ -32,6 +33,27 @@ const client = process.env.OPENAI_API_KEY
   : null;
 
 type ParsedResponse = InitialResponse | IterationResponse;
+
+function blockedResponse(
+  status: 404 | 503,
+  reason: "blocked:mode" | "blocked:analyze_disabled",
+) {
+  console.info(`analyze route blocked: ${reason}`);
+
+  const response = NextResponse.json(
+    {
+      error:
+        status === 404
+          ? "Not found."
+          : "Analyzer temporarily paused. Try again later.",
+    },
+    { status },
+  );
+
+  response.headers.set("x-nextpitch-blocked", "true");
+
+  return response;
+}
 
 async function generateResponse(
   payload: AnalyzeRequest,
@@ -67,6 +89,16 @@ async function generateResponse(
 }
 
 export async function POST(request: Request) {
+  const { appMode, analyzeEnabled } = getAppConfig();
+
+  if (appMode !== "full") {
+    return blockedResponse(404, "blocked:mode");
+  }
+
+  if (!analyzeEnabled) {
+    return blockedResponse(503, "blocked:analyze_disabled");
+  }
+
   const ip = getRequestIp(request.headers);
   const rateLimit = await limitRequest(ip);
 
