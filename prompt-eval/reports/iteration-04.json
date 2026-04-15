@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "generatedAt": "2026-04-15T09:10:19.355Z",
+    "model": "gpt-5.4-mini",
+    "judgeModel": null,
+    "runJudge": false,
+    "caseFilter": "iteration-04"
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "passRate": 1,
+    "schemaFailures": 0,
+    "genericFailures": 0,
+    "mirroredIdeaFailures": 0,
+    "badHooksFailures": 0,
+    "unrealisticTestFailures": 0,
+    "weakIterationFailures": 0,
+    "blockerCounts": {},
+    "overallPass": true
+  },
+  "results": [
+    {
+      "id": "iteration-04",
+      "mode": "iteration",
+      "input": {
+        "mode": "iteration",
+        "idea": "AI app",
+        "previous_angle": "Better productivity",
+        "result": "none",
+        "notes": ""
+      },
+      "expectations": {
+        "shouldRejectBeforeModel": true,
+        "expectedError": "Not enough context. Say what you tested and what happened."
+      },
+      "rejectedBeforeModel": true,
+      "validationError": "Not enough context. Say what you tested and what happened.",
+      "attempts": [],
+      "finalOutput": null,
+      "deterministic": {
+        "pass": true,
+        "blocker": false,
+        "tags": [
+          "EXPECTED_REJECTION"
+        ],
+        "reasons": [
+          "Expected rejection before model execution: Not enough context. Say what you tested and what happened."
+        ],
+        "expectedRejection": true,
+        "unexpectedRejection": false
+      },
+      "judge": null,
+      "pass": true,
+      "notes": [
+        "Rejected before model execution."
+      ]
+    }
+  ]
+}

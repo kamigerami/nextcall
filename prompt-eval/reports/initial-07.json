@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "generatedAt": "2026-04-15T09:26:16.232Z",
+    "model": "gpt-5.4-mini",
+    "judgeModel": "gpt-5.4-mini",
+    "runJudge": true,
+    "caseFilter": "initial-07"
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "passRate": 1,
+    "schemaFailures": 0,
+    "genericFailures": 0,
+    "mirroredIdeaFailures": 0,
+    "badHooksFailures": 0,
+    "unrealisticTestFailures": 0,
+    "weakIterationFailures": 0,
+    "blockerCounts": {},
+    "overallPass": true
+  },
+  "results": [
+    {
+      "id": "initial-07",
+      "mode": "initial",
+      "input": {
+        "mode": "initial",
+        "idea": "AI tool that turns YouTube videos into short clips automatically"
+      },
+      "expectations": {
+        "expectedVerdictOneOf": [
+          "weak",
+          "unclear"
+        ],
+        "mustFlagCrowdedness": true
+      },
+      "rejectedBeforeModel": false,
+      "attempts": [
+        {
+          "stage": "initial",
+          "rawOutputText": "{\"assessment\":{\"verdict\":\"weak\",\"reason\":\"This is a crowded, generic idea with shallow pain. Everyone knows the task, and most people already have some workaround. “Auto clipper” is not a problem statement; it’s a feature description.\"},\"best_angle\":{\"title\":\"Clip long podcasts for growth teams chasing distribution\",\"description\":\"Position it for creators and marketing teams that need 10–30 usable social clips from one long video fast, because they have deadlines and repurposing quotas. That gives real urgency and a budget.\"},\"other_angles\":[\"Turn customer webinars into clips for sales and demand gen teams\",\"Turn expert interviews into clips for creators who publish daily and need volume\"],\"hooks\":[\"I need clips, not another editing project.\",\"One video should feed the week.\",\"If clipping takes an hour, you won’t do it.\",\"Most videos die as one upload.\",\"The problem is not making content. It’s pulling the good bits out.\"],\"test\":{\"what_to_do\":\"Send a direct message to 20 creators, podcast editors, and content marketers offering to turn one recent long-form video into 10 short clips by hand in 24 hours. Ask if they would pay for that every week if the clips are actually usable.\",\"where\":[\"LinkedIn\",\"X\",\"creator communities\"],\"artifact_type\":\"dm\",\"artifact_text\":\"Saw your recent video/interview. I’m testing a service that turns one long video into 10 short clips in 24 hours. Not asking you to buy software — just want to know if this is something you’d pay for weekly if the clips are actually usable. Want me to do one for your latest video?\"},\"next_step\":{\"instruction\":\"Narrow it to one buyer with a budget and a deadline, then test willingness to pay before building anything.\",\"why\":\"The broad ‘YouTube to clips’ market is saturated. You only find a real business if you tie it to a specific workflow and someone who needs the output now.\"}}",
+          "parsedOutput": {
+            "assessment": {
+              "verdict": "weak",
+              "reason": "This is a crowded, generic idea with shallow pain. Everyone knows the task, and most people already have some workaround. “Auto clipper” is not a problem statement; it’s a feature description."
+            },
+            "best_angle": {
+              "title": "Clip long podcasts for growth teams chasing distribution",
+              "description": "Position it for creators and marketing teams that need 10–30 usable social clips from one long video fast, because they have deadlines and repurposing quotas. That gives real urgency and a budget."
+            },
+            "other_angles": [
+              "Turn customer webinars into clips for sales and demand gen teams",
+              "Turn expert interviews into clips for creators who publish daily and need volume"
+            ],
+            "hooks": [
+              "I need clips, not another editing project.",
+              "One video should feed the week.",
+              "If clipping takes an hour, you won’t do it.",
+              "Most videos die as one upload.",
+              "The problem is not making content. It’s pulling the good bits out."
+            ],
+            "test": {
+              "what_to_do": "Send a direct message to 20 creators, podcast editors, and content marketers offering to turn one recent long-form video into 10 short clips by hand in 24 hours. Ask if they would pay for that every week if the clips are actually usable.",
+              "where": [
+                "LinkedIn",
+                "X",
+                "creator communities"
+              ],
+              "artifact_type": "dm",
+              "artifact_text": "Saw your recent video/interview. I’m testing a service that turns one long video into 10 short clips in 24 hours. Not asking you to buy software — just want to know if this is something you’d pay for weekly if the clips are actually usable. Want me to do one for your latest video?"
+            },
+            "next_step": {
+              "instruction": "Narrow it to one buyer with a budget and a deadline, then test willingness to pay before building anything.",
+              "why": "The broad ‘YouTube to clips’ market is saturated. You only find a real business if you tie it to a specific workflow and someone who needs the output now."
+            }
+          },
+          "deterministic": {
+            "pass": true,
+            "blocker": false,
+            "tags": [],
+            "reasons": [],
+            "expectedRejection": false,
+            "unexpectedRejection": false
+          }
+        }
+      ],
+      "finalOutput": {
+        "assessment": {
+          "verdict": "weak",
+          "reason": "This is a crowded, generic idea with shallow pain. Everyone knows the task, and most people already have some workaround. “Auto clipper” is not a problem statement; it’s a feature description."
+        },
+        "best_angle": {
+          "title": "Clip long podcasts for growth teams chasing distribution",
+          "description": "Position it for creators and marketing teams that need 10–30 usable social clips from one long video fast, because they have deadlines and repurposing quotas. That gives real urgency and a budget."
+        },
+        "other_angles": [
+          "Turn customer webinars into clips for sales and demand gen teams",
+          "Turn expert interviews into clips for creators who publish daily and need volume"
+        ],
+        "hooks": [
+          "I need clips, not another editing project.",
+          "One video should feed the week.",
+          "If clipping takes an hour, you won’t do it.",
+          "Most videos die as one upload.",
+          "The problem is not making content. It’s pulling the good bits out."
+        ],
+        "test": {
+          "what_to_do": "Send a direct message to 20 creators, podcast editors, and content marketers offering to turn one recent long-form video into 10 short clips by hand in 24 hours. Ask if they would pay for that every week if the clips are actually usable.",
+          "where": [
+            "LinkedIn",
+            "X",
+            "creator communities"
+          ],
+          "artifact_type": "dm",
+          "artifact_text": "Saw your recent video/interview. I’m testing a service that turns one long video into 10 short clips in 24 hours. Not asking you to buy software — just want to know if this is something you’d pay for weekly if the clips are actually usable. Want me to do one for your latest video?"
+        },
+        "next_step": {
+          "instruction": "Narrow it to one buyer with a budget and a deadline, then test willingness to pay before building anything.",
+          "why": "The broad ‘YouTube to clips’ market is saturated. You only find a real business if you tie it to a specific workflow and someone who needs the output now."
+        }
+      },
+      "deterministic": {
+        "pass": true,
+        "blocker": false,
+        "tags": [],
+        "reasons": [],
+        "expectedRejection": false,
+        "unexpectedRejection": false
+      },
+      "judge": {
+        "pass": true,
+        "scores": {
+          "usefulness": 4,
+          "specificity": 4,
+          "decisiveness": 5,
+          "actionability": 4,
+          "genericness_reversed": 4,
+          "trust_to_act": 4
+        },
+        "reason": "The output makes a clear weak call, explicitly flags crowdedness, and gives a concrete next test aimed at a narrower buyer with urgency. It’s sharper than generic advice and not just a rewrite of the idea.",
+        "biggest_problem": "The test is still a bit optimistic because DM outreach to creators may produce polite interest rather than real payment signals, and the angle could be narrowed even further.",
+        "one_fix": "Swap the DM ask for a higher-friction signal, like offering a paid pilot or asking for a specific budget range before doing the clips."
+      },
+      "pass": true,
+      "notes": []
+    }
+  ]
+}

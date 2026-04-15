@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "generatedAt": "2026-04-15T09:33:50.231Z",
+    "model": "gpt-5.4-mini",
+    "judgeModel": "gpt-5.4-mini",
+    "runJudge": true,
+    "caseFilter": "iteration-01"
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "passRate": 1,
+    "schemaFailures": 0,
+    "genericFailures": 0,
+    "mirroredIdeaFailures": 0,
+    "badHooksFailures": 0,
+    "unrealisticTestFailures": 0,
+    "weakIterationFailures": 0,
+    "blockerCounts": {},
+    "overallPass": true
+  },
+  "results": [
+    {
+      "id": "iteration-01",
+      "mode": "iteration",
+      "input": {
+        "mode": "iteration",
+        "idea": "AI tool that summarizes Slack conversations into action items",
+        "previous_angle": "Stop losing action items in Slack",
+        "result": "none",
+        "notes": "Posted on LinkedIn, almost no reactions"
+      },
+      "expectations": {
+        "mustInterpretFailure": true,
+        "shouldNarrowHarder": true,
+        "mustNotSoundOptimistic": true
+      },
+      "rejectedBeforeModel": false,
+      "attempts": [
+        {
+          "stage": "initial",
+          "rawOutputText": "{\"analysis\":\"The angle failed. 'Stop losing action items in Slack' is too generic and LinkedIn silence is a weak signal, but 'almost no reactions' still says the pain was not compelling enough to make people stop scrolling. This is a broad productivity trope, not a sharp workflow failure. Narrow to one user role and one specific failure point where the cost is real.\",\"new_angle\":\"For engineering managers after a messy Slack thread: catching the one action item that never gets assigned before the team forgets it.\",\"hooks\":[\"Who’s actually doing this?\",\"We talked about it in Slack and then nothing happened.\",\"Wait, did anyone assign that or not?\"],\"next_step\":\"Test with 15 engineering managers who regularly run project threads in Slack. Send a dm or outreach_script that asks about one recent thread where a decision or task was discussed but never assigned. Success = at least 5/15 describe a real recent miss without prompting. If fewer than 5 can name a specific failure, this angle is dead.\"}",
+          "parsedOutput": {
+            "analysis": "The angle failed. 'Stop losing action items in Slack' is too generic and LinkedIn silence is a weak signal, but 'almost no reactions' still says the pain was not compelling enough to make people stop scrolling. This is a broad productivity trope, not a sharp workflow failure. Narrow to one user role and one specific failure point where the cost is real.",
+            "new_angle": "For engineering managers after a messy Slack thread: catching the one action item that never gets assigned before the team forgets it.",
+            "hooks": [
+              "Who’s actually doing this?",
+              "We talked about it in Slack and then nothing happened.",
+              "Wait, did anyone assign that or not?"
+            ],
+            "next_step": "Test with 15 engineering managers who regularly run project threads in Slack. Send a dm or outreach_script that asks about one recent thread where a decision or task was discussed but never assigned. Success = at least 5/15 describe a real recent miss without prompting. If fewer than 5 can name a specific failure, this angle is dead."
+          },
+          "deterministic": {
+            "pass": false,
+            "blocker": true,
+            "tags": [
+              "BAD_ITERATION_LOGIC"
+            ],
+            "reasons": [
+              "Production quality gate flagged BAD_ITERATION_LOGIC.",
+              "No-signal case must narrow to one role, one moment, and one concrete failure event."
+            ],
+            "expectedRejection": false,
+            "unexpectedRejection": false
+          }
+        },
+        {
+          "stage": "repair",
+          "rawOutputText": "{\"analysis\":\"The angle failed. \\\"Stop losing action items in Slack\\\" is generic and broad, so LinkedIn reactions were never going to prove pain. No one reacts to a vague productivity promise. The problem is not clear enough, the user role is undefined, and the failure mode is too unspecific to trigger urgency. You need a narrower workflow where missed follow-up causes a concrete cost.\",\"new_angle\":\"For ops managers on fast-moving teams, the real pain is after a meeting or thread ends and nobody owns the next step. Focus on the moment a Slack thread turns into a dropped task because ownership never got assigned.\",\"hooks\":[\"Who’s actually doing this?\",\"We said we’d handle it and then it disappeared.\",\"Did this ever get assigned?\"],\"next_step\":\"Test with a dm to 20 ops managers or team leads who live in Slack. Send one plain message asking whether they had a Slack thread or meeting in the last 7 days where an action item was dropped because no owner was assigned. Success = at least 6 confirm a real recent example and 3 ask to see a fix. Failure = fewer than 6 recent confirmations. Do not ask if they would use it.\"}",
+          "parsedOutput": {
+            "analysis": "The angle failed. \"Stop losing action items in Slack\" is generic and broad, so LinkedIn reactions were never going to prove pain. No one reacts to a vague productivity promise. The problem is not clear enough, the user role is undefined, and the failure mode is too unspecific to trigger urgency. You need a narrower workflow where missed follow-up causes a concrete cost.",
+            "new_angle": "For ops managers on fast-moving teams, the real pain is after a meeting or thread ends and nobody owns the next step. Focus on the moment a Slack thread turns into a dropped task because ownership never got assigned.",
+            "hooks": [
+              "Who’s actually doing this?",
+              "We said we’d handle it and then it disappeared.",
+              "Did this ever get assigned?"
+            ],
+            "next_step": "Test with a dm to 20 ops managers or team leads who live in Slack. Send one plain message asking whether they had a Slack thread or meeting in the last 7 days where an action item was dropped because no owner was assigned. Success = at least 6 confirm a real recent example and 3 ask to see a fix. Failure = fewer than 6 recent confirmations. Do not ask if they would use it."
+          },
+          "deterministic": {
+            "pass": true,
+            "blocker": false,
+            "tags": [],
+            "reasons": [],
+            "expectedRejection": false,
+            "unexpectedRejection": false
+          }
+        }
+      ],
+      "finalOutput": {
+        "analysis": "The angle failed. \"Stop losing action items in Slack\" is generic and broad, so LinkedIn reactions were never going to prove pain. No one reacts to a vague productivity promise. The problem is not clear enough, the user role is undefined, and the failure mode is too unspecific to trigger urgency. You need a narrower workflow where missed follow-up causes a concrete cost.",
+        "new_angle": "For ops managers on fast-moving teams, the real pain is after a meeting or thread ends and nobody owns the next step. Focus on the moment a Slack thread turns into a dropped task because ownership never got assigned.",
+        "hooks": [
+          "Who’s actually doing this?",
+          "We said we’d handle it and then it disappeared.",
+          "Did this ever get assigned?"
+        ],
+        "next_step": "Test with a dm to 20 ops managers or team leads who live in Slack. Send one plain message asking whether they had a Slack thread or meeting in the last 7 days where an action item was dropped because no owner was assigned. Success = at least 6 confirm a real recent example and 3 ask to see a fix. Failure = fewer than 6 recent confirmations. Do not ask if they would use it."
+      },
+      "deterministic": {
+        "pass": true,
+        "blocker": false,
+        "tags": [],
+        "reasons": [],
+        "expectedRejection": false,
+        "unexpectedRejection": false
+      },
+      "judge": {
+        "pass": true,
+        "scores": {
+          "usefulness": 4,
+          "specificity": 4,
+          "decisiveness": 5,
+          "actionability": 4,
+          "genericness_reversed": 4,
+          "trust_to_act": 4
+        },
+        "reason": "It correctly interprets the LinkedIn silence as failure of a vague angle, narrows to a more concrete workflow, and gives a clear next test with a real threshold. It is sharper than generic startup advice and avoids optimistic language.",
+        "biggest_problem": "The new angle is still a bit broad and slightly consultant-y; it names a segment but not a very specific recurring moment or trigger.",
+        "one_fix": "Narrow the test to one exact scenario, like ‘a Slack thread ends with no owner assigned after a meeting,’ and ask only about that one recent incident."
+      },
+      "pass": true,
+      "notes": []
+    }
+  ]
+}

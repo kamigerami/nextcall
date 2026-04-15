@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "generatedAt": "2026-04-15T09:17:20.823Z",
+    "model": "gpt-5.4-mini",
+    "judgeModel": "gpt-5.4-mini",
+    "runJudge": true,
+    "caseFilter": "initial-01"
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "passRate": 1,
+    "schemaFailures": 0,
+    "genericFailures": 0,
+    "mirroredIdeaFailures": 0,
+    "badHooksFailures": 0,
+    "unrealisticTestFailures": 0,
+    "weakIterationFailures": 0,
+    "blockerCounts": {},
+    "overallPass": true
+  },
+  "results": [
+    {
+      "id": "initial-01",
+      "mode": "initial",
+      "input": {
+        "mode": "initial",
+        "idea": "AI tool that summarizes Slack conversations into action items"
+      },
+      "expectations": {
+        "expectedVerdictOneOf": [
+          "weak",
+          "unclear"
+        ],
+        "mustFlagAsOverdone": true,
+        "shouldNarrowToSpecificPain": true,
+        "allowB2BPositiveBias": false
+      },
+      "rejectedBeforeModel": false,
+      "attempts": [
+        {
+          "stage": "initial",
+          "rawOutputText": "{\"assessment\":{\"verdict\":\"weak\",\"reason\":\"Too broad and too easy to dismiss. 'Summarize Slack into action items' sounds like a convenience feature, not a painful problem people urgently pay to solve. Slack already has built-in search and AI summaries are getting\" },\"best_angle\":{\"title\":\"Missed decisions after messy team threads\",\"description\":\"Position it around teams losing decisions, owners, and deadlines in fast-moving Slack channels. That's a sharper pain than generic summarization.\"},\"other_angles\":[\"Post-meeting follow-up for teams that never write notes\",\"Ops teams drowning in async handoffs and dropped tasks\"],\"hooks\":[\"We keep losing the actual decision in Slack.\",\"Your team did the work. Slack hid the action items.\",\"If it lives in Slack, it dies in Slack.\",\"The task was agreed on. Then nobody owned it.\",\"Most Slack threads end with confusion, not action.\"],\"test\":{\"what_to_do\":\"Send a direct message to 20 ops-heavy founders or team leads and ask if they routinely lose decisions or owners in Slack threads, then offer to manually turn one messy thread into action items.\",\"where\":[\"LinkedIn\",\"Slack communities\"],\"artifact_type\":\"dm\",\"artifact_text\":\"Quick question: do decisions and follow-ups keep getting buried in Slack threads on your team? I’m testing a very small thing: I’ll take one messy thread and turn it into clear action items/owners/deadlines by hand. If that’s a real pain, want to send me one thread and see if it’s useful?\"},\"next_step\":{\"instruction\":\"Stop calling it a Slack summarizer. Pick one team type that loses decisions in chat and test the pain manually.\",\"why\":\"Generic productivity tools die fast. Narrow pain is what gets replies and money.\"}}",
+          "parsedOutput": {
+            "assessment": {
+              "verdict": "weak",
+              "reason": "Too broad and too easy to dismiss. 'Summarize Slack into action items' sounds like a convenience feature, not a painful problem people urgently pay to solve. Slack already has built-in search and AI summaries are getting"
+            },
+            "best_angle": {
+              "title": "Missed decisions after messy team threads",
+              "description": "Position it around teams losing decisions, owners, and deadlines in fast-moving Slack channels. That's a sharper pain than generic summarization."
+            },
+            "other_angles": [
+              "Post-meeting follow-up for teams that never write notes",
+              "Ops teams drowning in async handoffs and dropped tasks"
+            ],
+            "hooks": [
+              "We keep losing the actual decision in Slack.",
+              "Your team did the work. Slack hid the action items.",
+              "If it lives in Slack, it dies in Slack.",
+              "The task was agreed on. Then nobody owned it.",
+              "Most Slack threads end with confusion, not action."
+            ],
+            "test": {
+              "what_to_do": "Send a direct message to 20 ops-heavy founders or team leads and ask if they routinely lose decisions or owners in Slack threads, then offer to manually turn one messy thread into action items.",
+              "where": [
+                "LinkedIn",
+                "Slack communities"
+              ],
+              "artifact_type": "dm",
+              "artifact_text": "Quick question: do decisions and follow-ups keep getting buried in Slack threads on your team? I’m testing a very small thing: I’ll take one messy thread and turn it into clear action items/owners/deadlines by hand. If that’s a real pain, want to send me one thread and see if it’s useful?"
+            },
+            "next_step": {
+              "instruction": "Stop calling it a Slack summarizer. Pick one team type that loses decisions in chat and test the pain manually.",
+              "why": "Generic productivity tools die fast. Narrow pain is what gets replies and money."
+            }
+          },
+          "deterministic": {
+            "pass": true,
+            "blocker": false,
+            "tags": [],
+            "reasons": [],
+            "expectedRejection": false,
+            "unexpectedRejection": false
+          }
+        }
+      ],
+      "finalOutput": {
+        "assessment": {
+          "verdict": "weak",
+          "reason": "Too broad and too easy to dismiss. 'Summarize Slack into action items' sounds like a convenience feature, not a painful problem people urgently pay to solve. Slack already has built-in search and AI summaries are getting"
+        },
+        "best_angle": {
+          "title": "Missed decisions after messy team threads",
+          "description": "Position it around teams losing decisions, owners, and deadlines in fast-moving Slack channels. That's a sharper pain than generic summarization."
+        },
+        "other_angles": [
+          "Post-meeting follow-up for teams that never write notes",
+          "Ops teams drowning in async handoffs and dropped tasks"
+        ],
+        "hooks": [
+          "We keep losing the actual decision in Slack.",
+          "Your team did the work. Slack hid the action items.",
+          "If it lives in Slack, it dies in Slack.",
+          "The task was agreed on. Then nobody owned it.",
+          "Most Slack threads end with confusion, not action."
+        ],
+        "test": {
+          "what_to_do": "Send a direct message to 20 ops-heavy founders or team leads and ask if they routinely lose decisions or owners in Slack threads, then offer to manually turn one messy thread into action items.",
+          "where": [
+            "LinkedIn",
+            "Slack communities"
+          ],
+          "artifact_type": "dm",
+          "artifact_text": "Quick question: do decisions and follow-ups keep getting buried in Slack threads on your team? I’m testing a very small thing: I’ll take one messy thread and turn it into clear action items/owners/deadlines by hand. If that’s a real pain, want to send me one thread and see if it’s useful?"
+        },
+        "next_step": {
+          "instruction": "Stop calling it a Slack summarizer. Pick one team type that loses decisions in chat and test the pain manually.",
+          "why": "Generic productivity tools die fast. Narrow pain is what gets replies and money."
+        }
+      },
+      "deterministic": {
+        "pass": true,
+        "blocker": false,
+        "tags": [],
+        "reasons": [],
+        "expectedRejection": false,
+        "unexpectedRejection": false
+      },
+      "judge": {
+        "pass": true,
+        "scores": {
+          "usefulness": 4,
+          "specificity": 4,
+          "decisiveness": 5,
+          "actionability": 4,
+          "genericness_reversed": 4,
+          "trust_to_act": 4
+        },
+        "reason": "The output makes a clear call that the idea is weak/overdone and narrows it to a more specific pain instead of treating it as a general Slack summarizer. The next test is concrete and manual, which fits the validation goal.",
+        "biggest_problem": "It still leans a bit on broad positioning language and could be even sharper about the exact user segment to test first.",
+        "one_fix": "Name one specific team type to target first, instead of \"ops-heavy founders or team leads,\" so the test is tighter and more believable."
+      },
+      "pass": true,
+      "notes": []
+    }
+  ]
+}

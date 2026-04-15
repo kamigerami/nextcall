@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "generatedAt": "2026-04-15T09:16:41.939Z",
+    "model": "gpt-5.4-mini",
+    "judgeModel": "gpt-5.4-mini",
+    "runJudge": true,
+    "caseFilter": "initial-05"
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "passRate": 1,
+    "schemaFailures": 0,
+    "genericFailures": 0,
+    "mirroredIdeaFailures": 0,
+    "badHooksFailures": 0,
+    "unrealisticTestFailures": 0,
+    "weakIterationFailures": 0,
+    "blockerCounts": {},
+    "overallPass": true
+  },
+  "results": [
+    {
+      "id": "initial-05",
+      "mode": "initial",
+      "input": {
+        "mode": "initial",
+        "idea": "AI powered platform for scalable intelligent workflow automation across distributed teams"
+      },
+      "expectations": {
+        "shouldRejectBeforeModel": true,
+        "expectedError": "This reads like buzzwords, not a problem. Make it concrete.",
+        "mustRejectBuzzwordSoup": true,
+        "shouldNotInventConfidence": true
+      },
+      "rejectedBeforeModel": true,
+      "validationError": "This reads like buzzwords, not a problem. Make it concrete.",
+      "attempts": [],
+      "finalOutput": null,
+      "deterministic": {
+        "pass": true,
+        "blocker": false,
+        "tags": [
+          "EXPECTED_REJECTION"
+        ],
+        "reasons": [
+          "Expected rejection before model execution: This reads like buzzwords, not a problem. Make it concrete."
+        ],
+        "expectedRejection": true,
+        "unexpectedRejection": false
+      },
+      "judge": null,
+      "pass": true,
+      "notes": [
+        "Rejected before model execution."
+      ]
+    }
+  ]
+}

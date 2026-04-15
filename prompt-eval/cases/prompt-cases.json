@@ -1,0 +1,313 @@
+[
+  {
+    "id": "initial-01",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "AI tool that summarizes Slack conversations into action items"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustFlagAsOverdone": true,
+      "shouldNarrowToSpecificPain": true,
+      "allowB2BPositiveBias": false
+    }
+  },
+  {
+    "id": "initial-02",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Tool for founders to track startup ideas and validate them faster"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustAvoidMirroring": true,
+      "shouldPushTowardSharperProblem": true
+    }
+  },
+  {
+    "id": "initial-03",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "App that helps people stay healthy and build better habits"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustCallTooBroad": true
+    }
+  },
+  {
+    "id": "initial-04",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Tool for small property managers to handle tenant move-out inspections and damage reports"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["promising"],
+      "shouldRewardRecurringOperationalPain": true,
+      "shouldSuggestPracticalTesting": true
+    }
+  },
+  {
+    "id": "initial-05",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "AI powered platform for scalable intelligent workflow automation across distributed teams"
+    },
+    "expectations": {
+      "shouldRejectBeforeModel": true,
+      "expectedError": "This reads like buzzwords, not a problem. Make it concrete.",
+      "mustRejectBuzzwordSoup": true,
+      "shouldNotInventConfidence": true
+    }
+  },
+  {
+    "id": "initial-06",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Software for accounting firms to chase missing client documents before monthly close"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["promising"],
+      "shouldRewardBoringB2B": true,
+      "shouldEmphasizeOperationalPain": true
+    }
+  },
+  {
+    "id": "initial-07",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "AI tool that turns YouTube videos into short clips automatically"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustFlagCrowdedness": true
+    }
+  },
+  {
+    "id": "initial-08",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "App for divorced parents to coordinate school pickups without texting each other"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["promising"],
+      "shouldRecognizeEmotionalAndOperationalPain": true,
+      "shouldSuggestHumanArtifact": true
+    }
+  },
+  {
+    "id": "initial-09",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Subscription for replacement screws and fittings for IKEA furniture"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["unclear", "promising"],
+      "mustNotOverpraiseNovelty": true
+    }
+  },
+  {
+    "id": "initial-10",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Uber for home cleaning services"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustRejectLazyFraming": true
+    }
+  },
+  {
+    "id": "initial-11",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Platform engineering tool to simplify Kubernetes workflows"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustCallVagueTechnicalIdea": true
+    }
+  },
+  {
+    "id": "initial-12",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Tool for construction companies to track safety inspections across sites"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["promising"],
+      "shouldRewardBoringB2B": true
+    }
+  },
+  {
+    "id": "initial-13",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Next-gen AI powered CRM for modern teams"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustRejectBuzzwordSoup": true
+    }
+  },
+  {
+    "id": "initial-14",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Something to help remote teams collaborate better"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "shouldGuideNotPraise": true
+    }
+  },
+  {
+    "id": "initial-15",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Tool that alerts ecommerce teams when product pricing bugs cause revenue loss"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["promising"],
+      "shouldRecognizeRevenuePain": true
+    }
+  },
+  {
+    "id": "iteration-01",
+    "mode": "iteration",
+    "input": {
+      "mode": "iteration",
+      "idea": "AI tool that summarizes Slack conversations into action items",
+      "previous_angle": "Stop losing action items in Slack",
+      "result": "none",
+      "notes": "Posted on LinkedIn, almost no reactions"
+    },
+    "expectations": {
+      "mustInterpretFailure": true,
+      "shouldNarrowHarder": true,
+      "mustNotSoundOptimistic": true
+    }
+  },
+  {
+    "id": "iteration-02",
+    "mode": "iteration",
+    "input": {
+      "mode": "iteration",
+      "idea": "App for divorced parents to coordinate school pickups without texting each other",
+      "previous_angle": "Stop chaotic pickup texting",
+      "result": "some",
+      "notes": "A few parents replied but not strongly"
+    },
+    "expectations": {
+      "mustRefineNotCelebrate": true,
+      "shouldSharpenEmotionalOrOperationalAngle": true
+    }
+  },
+  {
+    "id": "iteration-03",
+    "mode": "iteration",
+    "input": {
+      "mode": "iteration",
+      "idea": "Software for accounting firms to chase missing client documents before monthly close",
+      "previous_angle": "Stop chasing clients for missing documents every month",
+      "result": "strong",
+      "notes": "Several firms said this is painful and asked for a demo"
+    },
+    "expectations": {
+      "mustDoubleDown": true,
+      "shouldGetMoreSpecific": true
+    }
+  },
+  {
+    "id": "iteration-04",
+    "mode": "iteration",
+    "input": {
+      "mode": "iteration",
+      "idea": "AI app",
+      "previous_angle": "Better productivity",
+      "result": "none",
+      "notes": ""
+    },
+    "expectations": {
+      "shouldRejectBeforeModel": true,
+      "expectedError": "Not enough context. Say what you tested and what happened."
+    }
+  },
+  {
+    "id": "initial-16",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Marketplace for connecting innovative local service providers with customers through AI"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustRejectBuzzwordSoup": true,
+      "shouldNotInventConfidence": true
+    }
+  },
+  {
+    "id": "initial-17",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Software for tattoo studios to manage ink inventory and reorder timing"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["promising"],
+      "mustRespectNicheIfPainIsReal": true
+    }
+  },
+  {
+    "id": "initial-18",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "AI website builder for startups"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak"],
+      "mustFlagCommodity": true
+    }
+  },
+  {
+    "id": "initial-19",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Tool for accounting firms to chase missing client documents before monthly close and send reminders before deadlines so staff stop following up manually every month"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["promising"],
+      "shouldNotBeRejectedAsWallOfText": true
+    }
+  },
+  {
+    "id": "initial-20",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "Revolutionary next-generation AI-powered platform to transform productivity for every modern team through seamless automation and scalable collaboration"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustRejectBuzzwordSoup": true,
+      "mustTriggerAdCopySensitivity": true
+    }
+  }
+]
