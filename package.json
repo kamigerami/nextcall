@@ -8,10 +8,15 @@
     "start": "next start",
     "lint": "eslint .",
     "eval:prompts": "tsx prompt-eval/src/eval.ts",
+    "video:studio": "remotion studio remotion/index.ts",
+    "video:render": "remotion render remotion/index.ts NextPitchDemo out/nextpitch-demo.mp4",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@remotion/cli": "^4.0.448",
+    "@remotion/google-fonts": "^4.0.448",
+    "@remotion/media": "^4.0.448",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
     "clsx": "^2.1.1",
@@ -19,6 +24,7 @@
     "openai": "^6.34.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "remotion": "^4.0.448",
     "zod": "^4.3.6"
   },
   "devDependencies": {
