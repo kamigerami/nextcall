@@ -309,5 +309,20 @@
       "mustRejectBuzzwordSoup": true,
       "mustTriggerAdCopySensitivity": true
     }
+  },
+  {
+    "id": "initial-21",
+    "mode": "initial",
+    "input": {
+      "mode": "initial",
+      "idea": "google for second hand ad sales"
+    },
+    "expectations": {
+      "expectedVerdictOneOf": ["weak", "unclear"],
+      "mustAvoidMirroring": true,
+      "mustFlagCrowdedness": true,
+      "shouldPushTowardSharperProblem": true,
+      "shouldNotInventConfidence": true
+    }
   }
 ]

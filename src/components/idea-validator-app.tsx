@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
 import type {
   AnalyzeRequest,
@@ -19,6 +19,7 @@ type StoredState = {
   resultSignal: ResultSignal;
   notes: string;
   latestResult: ResultState | null;
+  lastEvaluatedKey: string | null;
 };
 
 type ResultState =
@@ -41,6 +42,7 @@ const initialState: StoredState = {
   resultSignal: "none",
   notes: "",
   latestResult: null,
+  lastEvaluatedKey: null,
 };
 
 type VerdictTone = "danger" | "caution" | "success";
@@ -100,6 +102,36 @@ function formatArtifactText(text: string) {
   return text.trim();
 }
 
+function evaluationKey(state: Pick<
+  StoredState,
+  "mode" | "initialIdea" | "iterationIdea" | "previousAngle" | "resultSignal" | "notes"
+>) {
+  if (state.mode === "initial") {
+    return `initial:${state.initialIdea.trim()}`;
+  }
+
+  return JSON.stringify({
+    mode: state.mode,
+    idea: state.iterationIdea.trim(),
+    previousAngle: state.previousAngle.trim(),
+    resultSignal: state.resultSignal,
+    notes: state.notes.trim(),
+  });
+}
+
+function isPristineState(state: StoredState) {
+  return (
+    state.mode === initialState.mode &&
+    state.initialIdea === initialState.initialIdea &&
+    state.iterationIdea === initialState.iterationIdea &&
+    state.previousAngle === initialState.previousAngle &&
+    state.resultSignal === initialState.resultSignal &&
+    state.notes === initialState.notes &&
+    state.latestResult === initialState.latestResult &&
+    state.lastEvaluatedKey === initialState.lastEvaluatedKey
+  );
+}
+
 function ResultPanel({
   label,
   title,
@@ -147,13 +179,19 @@ export function IdeaValidatorApp() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState("");
   const [isHydrated, setIsHydrated] = useState(false);
+  const ideaInputRef = useRef<HTMLTextAreaElement>(null);
+  const requestIdRef = useRef(0);
 
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as StoredState;
-        setState(parsed);
+        const parsed = JSON.parse(raw) as Partial<StoredState>;
+        setState({
+          ...initialState,
+          ...parsed,
+          lastEvaluatedKey: parsed.lastEvaluatedKey ?? null,
+        });
       }
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
@@ -164,6 +202,11 @@ export function IdeaValidatorApp() {
 
   useEffect(() => {
     if (!isHydrated) {
+      return;
+    }
+
+    if (isPristineState(state)) {
+      window.localStorage.removeItem(STORAGE_KEY);
       return;
     }
 
@@ -188,9 +231,40 @@ export function IdeaValidatorApp() {
   const verdict = state.latestResult
     ? verdictState(state.latestResult, state.resultSignal)
     : null;
+  const hasPendingChanges = Boolean(
+    state.latestResult &&
+      state.lastEvaluatedKey &&
+      state.lastEvaluatedKey !== evaluationKey(state),
+  );
 
   function updateState(patch: Partial<StoredState>) {
     setState((current) => ({ ...current, ...patch }));
+  }
+
+  function focusIdeaInput() {
+    window.requestAnimationFrame(() => {
+      ideaInputRef.current?.focus();
+      ideaInputRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }
+
+  function handleModeChange(mode: Mode) {
+    requestIdRef.current += 1;
+    setError("");
+    updateState({ mode, latestResult: null });
+    focusIdeaInput();
+  }
+
+  function handleNewIdea() {
+    requestIdRef.current += 1;
+    setError("");
+    setCopied("");
+    window.localStorage.removeItem(STORAGE_KEY);
+    setState(initialState);
+    focusIdeaInput();
   }
 
   async function handleCopy(label: string, value: string) {
@@ -202,6 +276,9 @@ export function IdeaValidatorApp() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    const submittedEvaluationKey = evaluationKey(state);
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
 
     const payload: AnalyzeRequest =
       state.mode === "initial"
@@ -230,18 +307,31 @@ export function IdeaValidatorApp() {
         const data = await response.json();
 
         if (!response.ok) {
+          if (requestId !== requestIdRef.current) {
+            return;
+          }
+
           setError(data.error ?? "Something broke.");
+          return;
+        }
+
+        if (requestId !== requestIdRef.current) {
           return;
         }
 
         setState((current) => ({
           ...current,
           latestResult: {
-            mode: current.mode,
+            mode: payload.mode,
             data,
           } as ResultState,
+          lastEvaluatedKey: submittedEvaluationKey,
         }));
       } catch {
+        if (requestId !== requestIdRef.current) {
+          return;
+        }
+
         setError("No usable answer. Make the idea more concrete and try again.");
       }
     });
@@ -304,7 +394,7 @@ export function IdeaValidatorApp() {
                   <button
                     key={mode}
                     type="button"
-                    onClick={() => updateState({ mode, latestResult: null })}
+                    onClick={() => handleModeChange(mode)}
                     className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
                       state.mode === mode
                         ? "border-black bg-black text-white"
@@ -323,10 +413,20 @@ export function IdeaValidatorApp() {
             <form onSubmit={handleSubmit} className="px-5 py-5 sm:px-7 sm:py-7">
               <div className="space-y-5">
                 <label className="block">
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
-                    {state.mode === "initial" ? "Paste the idea" : "Idea you tested"}
+                  <span className="flex items-center justify-between gap-4">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.26em] text-black/35">
+                      {state.mode === "initial" ? "Paste the idea" : "Idea you tested"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleNewIdea}
+                      className="text-[11px] font-semibold uppercase tracking-[0.24em] text-black/42 transition hover:text-black"
+                    >
+                      + New idea
+                    </button>
                   </span>
                   <textarea
+                    ref={ideaInputRef}
                     id="idea"
                     name="idea"
                     value={currentIdea}
@@ -412,9 +512,13 @@ export function IdeaValidatorApp() {
                   >
                     {isPending ? "Working..." : "Make the call →"}
                   </button>
-                  <p className="text-sm text-black/45">
-                    500 char max. No fluff. No transcript.
-                  </p>
+                  {hasPendingChanges ? (
+                    <p className="text-sm text-[#7a560f]">Changes not evaluated yet.</p>
+                  ) : (
+                    <p className="text-sm text-black/45">
+                      500 char max. No fluff. No transcript.
+                    </p>
+                  )}
                 </div>
 
                 {error ? (
@@ -429,6 +533,18 @@ export function IdeaValidatorApp() {
           <div className="mt-5 flex-1 border border-black/12 bg-white/84 shadow-[0_24px_70px_rgba(17,17,17,0.06)] backdrop-blur">
             {state.latestResult ? (
               <div className="grid gap-0">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 px-5 py-4 sm:px-7">
+                  <p className="text-sm text-black/52">
+                    Keep the draft. Tighten the input. Run it again when it is sharper.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={focusIdeaInput}
+                    className="inline-flex h-11 items-center justify-center border border-black/12 bg-white px-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-black transition hover:border-black/28 hover:bg-[#f5f2eb]"
+                  >
+                    Edit and run again
+                  </button>
+                </div>
                 <ResultPanel
                   label="Verdict"
                   title={

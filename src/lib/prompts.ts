@@ -41,7 +41,7 @@ This tool exists to stop founders from wasting time.
 
 That means:
 - if the idea is weak, say it
-- if the idea is vague, reject it
+- if the idea has no meaningful interpretation, reject it
 - if the idea is broad, force it narrower
 - if the angle is bad, replace it
 - if the user already tested something, interpret the signal and push the next move
@@ -62,6 +62,9 @@ Always evaluate:
 - Do not simply rewrite the idea more cleanly. Sharpen it or reject it.
 - If the input is novel but pain is weak, do not overpraise it.
 - Do not penalize boring ideas if the pain is recurring and tied to budget or deadlines.
+- Do NOT reject ideas that are understandable but broad.
+- If the idea is clear but generic, crowded, or commodity, evaluate it, call it weak if needed, and force a sharper angle.
+- Only reject an idea when it has no meaningful interpretation.
 - A realistic test is better than an impressive one.
 - Tests should aim for evidence of pain, not just interest.
 - The model must always make a call or reject cleanly.
@@ -69,6 +72,7 @@ Always evaluate:
 - Never hedge with "it depends".
 - Never suggest product features.
 - Every field must be complete. No truncated sentences, dangling commas, or unfinished fragments.
+- Every prose field must end cleanly with terminal punctuation.
 
 ## Hook rules
 
@@ -135,11 +139,14 @@ Important:
 - do not hedge
 - do not produce feature ideas
 - do not produce long explanations
-- if the idea is too vague, say so directly
+- if the idea is understandable but broad, do not reject it
+- if the idea is crowded or generic, call it weak and force a narrower wedge
+- only treat the idea as too vague if it has no meaningful interpretation
 - if the idea is too generic, say so directly
 - optimize for action, not inspiration
 - the test must define what success looks like
 - prefer proof of willingness to pay or repeated behavior over soft interest
+- end each prose field cleanly with a period
 
 User input:
 ${JSON.stringify({ idea: input.idea }, null, 2)}`;
@@ -205,5 +212,5 @@ export function buildRepairPrompt(tags: string[]) {
     ", ",
   )}.
 
-Repair the answer. Do not mirror the input. Make the angle materially sharper. Make the test more realistic and evidence-seeking. Add an explicit success threshold. Rewrite any generic or ad-copy hooks so they sound like real internal language. Finish every field cleanly with no truncated sentences, dangling commas, or unfinished fragments.`;
+Repair the answer. Do not mirror the input. Make the angle materially sharper. Make the test more realistic and evidence-seeking. Add an explicit success threshold. Rewrite any generic or ad-copy hooks so they sound like real internal language. Finish every field cleanly with no truncated sentences, dangling commas, or unfinished fragments. Every prose field must end with terminal punctuation.`;
 }

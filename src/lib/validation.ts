@@ -6,6 +6,13 @@ import {
 
 export const MAX_IDEA_LENGTH = 500;
 export const MAX_NOTES_LENGTH = 500;
+export const IDEA_GUIDANCE_MESSAGE =
+  "Too broad. Pick one: specific buyer, category, or failure. Example: Used car buyers avoiding scams on Blocket.";
+export const NARROW_IDEA_MESSAGE = "Too broad. Narrow to one user and one outcome.";
+export const BUZZWORD_SOUP_MESSAGE =
+  "This reads like buzzwords, not a problem. Make it concrete.";
+export const ITERATION_CONTEXT_MESSAGE =
+  "Not enough context. Say what you tested and what happened.";
 const MIN_IDEA_LENGTH = 10;
 
 const PLACEHOLDER_PATTERNS = [
@@ -47,6 +54,30 @@ const SIGNAL_PATTERNS = {
     /\b(pay|price|budget|revenue|cost|invoice|deadline|fine|monthly close|renewal)\b/i,
 };
 
+const IDEA_SHAPE_PATTERN =
+  /\b(for|to|with|without|after|before|when|during|against|around|into|from|helps?|turns?|alerts?|tracks?|chases?|search|google|marketplace|directory|subscription|service|builder|crm|software|tool|app)\b/i;
+
+const LOW_SIGNAL_FILLER_WORDS = new Set([
+  "a",
+  "an",
+  "and",
+  "app",
+  "better",
+  "for",
+  "idea",
+  "platform",
+  "service",
+  "software",
+  "something",
+  "startup",
+  "team",
+  "teams",
+  "that",
+  "the",
+  "to",
+  "tool",
+]);
+
 function normalize(value: string) {
   return value.replace(/\s+/g, " ").trim();
 }
@@ -62,6 +93,15 @@ export function hasUsefulIdeaSignal(input: string) {
   const normalized = normalize(input);
 
   return Object.values(SIGNAL_PATTERNS).some((pattern) => pattern.test(normalized));
+}
+
+function hasMeaningfulIdeaShape(input: string) {
+  const normalized = normalize(input).toLowerCase();
+  const informativeWords = normalized
+    .split(/\s+/)
+    .filter((word) => word.length >= 3 && !LOW_SIGNAL_FILLER_WORDS.has(word));
+
+  return informativeWords.length >= 3 && IDEA_SHAPE_PATTERN.test(normalized);
 }
 
 function isPlaceholder(input: string) {
@@ -103,7 +143,7 @@ export function validateAnalyzeRequest(
   if (!parsed.success) {
     return {
       ok: false,
-      message: "Too vague. Name the buyer, pain, or price.",
+      message: IDEA_GUIDANCE_MESSAGE,
     };
   }
 
@@ -124,35 +164,39 @@ export function validateAnalyzeRequest(
   if (idea.length < MIN_IDEA_LENGTH || isPlaceholder(idea)) {
     return {
       ok: false,
-      message: "Too vague. Name the buyer, pain, or price.",
+      message: IDEA_GUIDANCE_MESSAGE,
     };
   }
 
   if (idea.length > MAX_IDEA_LENGTH) {
     return {
       ok: false,
-      message: "Too broad. Narrow to one user and one outcome.",
+      message: NARROW_IDEA_MESSAGE,
     };
   }
 
   if (isBuzzwordSoup(idea)) {
     return {
       ok: false,
-      message: "This reads like buzzwords, not a problem. Make it concrete.",
+      message: BUZZWORD_SOUP_MESSAGE,
     };
   }
 
-  if (!hasUsefulIdeaSignal(idea)) {
+  if (!hasUsefulIdeaSignal(idea) && !hasMeaningfulIdeaShape(idea)) {
     return {
       ok: false,
-      message: "Too vague. Name the buyer, pain, or price.",
+      message: IDEA_GUIDANCE_MESSAGE,
     };
   }
 
-  if (isManifesto(data.idea) && !SIGNAL_PATTERNS.buyer.test(idea) && !SIGNAL_PATTERNS.pain.test(idea)) {
+  if (
+    isManifesto(data.idea) &&
+    !SIGNAL_PATTERNS.buyer.test(idea) &&
+    !SIGNAL_PATTERNS.pain.test(idea)
+  ) {
     return {
       ok: false,
-      message: "Too broad. Narrow to one user and one outcome.",
+      message: NARROW_IDEA_MESSAGE,
     };
   }
 
@@ -174,21 +218,21 @@ function validateIterationRequest(
   if (!previousAngle || previousAngle.length < 10) {
     return {
       ok: false,
-      message: "Not enough context. Say what you tested and what happened.",
+      message: ITERATION_CONTEXT_MESSAGE,
     };
   }
 
   if (notes.length > MAX_NOTES_LENGTH) {
     return {
       ok: false,
-      message: "Too broad. Narrow to one user and one outcome.",
+      message: NARROW_IDEA_MESSAGE,
     };
   }
 
   if (data.result === "none" && isWeakAngle(previousAngle) && notes.length < 20) {
     return {
       ok: false,
-      message: "Not enough context. Say what you tested and what happened.",
+      message: ITERATION_CONTEXT_MESSAGE,
     };
   }
 

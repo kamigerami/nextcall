@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { validateAnalyzeRequest } from "@/lib/validation";
+import {
+  BUZZWORD_SOUP_MESSAGE,
+  IDEA_GUIDANCE_MESSAGE,
+  NARROW_IDEA_MESSAGE,
+  ITERATION_CONTEXT_MESSAGE,
+  validateAnalyzeRequest,
+} from "@/lib/validation";
 
 describe("validateAnalyzeRequest", () => {
   it("rejects buzzword soup", () => {
@@ -12,7 +18,7 @@ describe("validateAnalyzeRequest", () => {
     expect(result.ok).toBe(false);
     expect(result).toMatchObject({
       ok: false,
-      message: "This reads like buzzwords, not a problem. Make it concrete.",
+      message: BUZZWORD_SOUP_MESSAGE,
     });
   });
 
@@ -34,6 +40,28 @@ describe("validateAnalyzeRequest", () => {
     expect(result.ok).toBe(true);
   });
 
+  it("accepts broad but interpretable category ideas", () => {
+    const result = validateAnalyzeRequest({
+      mode: "initial",
+      idea: "google for second hand ad sales",
+    });
+
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects meaningless short ideas with sharper guidance", () => {
+    const result = validateAnalyzeRequest({
+      mode: "initial",
+      idea: "idea app",
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result).toMatchObject({
+      ok: false,
+      message: IDEA_GUIDANCE_MESSAGE,
+    });
+  });
+
   it("rejects overly long ideas", () => {
     const result = validateAnalyzeRequest({
       mode: "initial",
@@ -43,7 +71,7 @@ describe("validateAnalyzeRequest", () => {
     expect(result.ok).toBe(false);
     expect(result).toMatchObject({
       ok: false,
-      message: "Too broad. Narrow to one user and one outcome.",
+      message: NARROW_IDEA_MESSAGE,
     });
   });
 
@@ -59,7 +87,7 @@ describe("validateAnalyzeRequest", () => {
     expect(result.ok).toBe(false);
     expect(result).toMatchObject({
       ok: false,
-      message: "Not enough context. Say what you tested and what happened.",
+      message: ITERATION_CONTEXT_MESSAGE,
     });
   });
 });

@@ -23,7 +23,7 @@ import {
   evaluateIterationQuality,
 } from "@/lib/quality-gate";
 import { getRequestIp, limitRequest } from "@/lib/rate-limit";
-import { validateAnalyzeRequest } from "@/lib/validation";
+import { IDEA_GUIDANCE_MESSAGE, validateAnalyzeRequest } from "@/lib/validation";
 
 const FAILURE_MESSAGE =
   "No usable answer. Make the idea more concrete: who it is for, what pain it solves, or what someone would pay for.";
@@ -114,10 +114,7 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { error: "Too vague. Name the buyer, pain, or price." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: IDEA_GUIDANCE_MESSAGE }, { status: 400 });
   }
 
   const validated = validateAnalyzeRequest(body);
